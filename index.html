@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>The Codeless Marketing Lab Quest</title>
+  <style>
+    :root {
+      --bg1: #090a1a;
+      --bg2: #151b3d;
+      --panel: rgba(255,255,255,.09);
+      --panel2: rgba(255,255,255,.14);
+      --text: #ffffff;
+      --muted: #c8d2ff;
+      --accent: #8b5cf6;
+      --accent2: #00e5ff;
+      --accent3: #ffbe0b;
+      --good: #42f5b3;
+      --bad: #ff6b6b;
+      --border: rgba(255,255,255,.18);
+      --shadow: rgba(0,0,0,.35);
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at 10% 10%, rgba(0,229,255,.28), transparent 25%),
+        radial-gradient(circle at 90% 5%, rgba(139,92,246,.34), transparent 24%),
+        radial-gradient(circle at 50% 95%, rgba(255,190,11,.20), transparent 28%),
+        linear-gradient(145deg, var(--bg1), var(--bg2));
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px);
+      background-size: 34px 34px;
+      mask-image: linear-gradient(to bottom, rgba(0,0,0,.8), transparent 88%);
+      pointer-events: none;
+    }
+
+    .orb {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(8px);
+      opacity: .62;
+      z-index: -1;
+      animation: float 9s ease-in-out infinite;
+    }
+
+    .orb.one {
+      width: 190px; height: 190px;
+      background: rgba(0,229,255,.25);
+      left: -40px; top: 180px;
+    }
+
+    .orb.two {
+      width: 260px; height: 260px;
+      background: rgba(139,92,246,.22);
+      right: -90px; bottom: 120px;
+      animation-delay: -3s;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-22px) scale(1.04); }
+    }
+
+    .app {
+      width: min(980px, 100%);
+      margin: 0 auto;
+      padding: 16px;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 0;
+      backdrop-filter: blur(16px);
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.12);
+      color: var(--text);
+      border-radius: 999px;
+      padding: 10px 13px;
+      font-weight: 850;
+      box-shadow: 0 10px 25px rgba(0,0,0,.16);
+      font-size: 14px;
+    }
+
+    .hero, .card {
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(255,255,255,.13), rgba(255,255,255,.07));
+      border-radius: 30px;
+      box-shadow: 0 25px 80px var(--shadow);
+      backdrop-filter: blur(18px);
+    }
+
+    .hero {
+      padding: clamp(24px, 5vw, 48px);
+      margin: 18px 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "✦";
+      position: absolute;
+      right: 38px;
+      top: 24px;
+      font-size: 90px;
+      color: rgba(255,255,255,.12);
+      transform: rotate(15deg);
+    }
+
+    .kicker {
+      display: inline-flex;
+      gap: 9px;
+      align-items: center;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.10);
+      padding: 9px 12px;
+      border-radius: 999px;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 18px;
+    }
+
+    h1 {
+      font-size: clamp(38px, 9vw, 82px);
+      line-height: .92;
+      letter-spacing: -3px;
+      margin: 0 0 14px;
+    }
+
+    h2 {
+      font-size: clamp(25px, 5vw, 42px);
+      line-height: 1;
+      letter-spacing: -1.2px;
+      margin: 8px 0 14px;
+    }
+
+    h3 { margin: 0 0 10px; }
+
+    p {
+      color: var(--muted);
+      font-size: 17px;
+      line-height: 1.6;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.3fr .7fr;
+      gap: 20px;
+      align-items: center;
+    }
+
+    @media (max-width: 760px) {
+      .hero-grid { grid-template-columns: 1fr; }
+    }
+
+    .visual {
+      min-height: 270px;
+      border-radius: 28px;
+      border: 1px solid rgba(255,255,255,.16);
+      background:
+        radial-gradient(circle at 30% 25%, rgba(0,229,255,.42), transparent 22%),
+        radial-gradient(circle at 70% 70%, rgba(255,190,11,.32), transparent 24%),
+        linear-gradient(145deg, rgba(139,92,246,.28), rgba(255,255,255,.06));
+      position: relative;
+      overflow: hidden;
+      display: grid;
+      place-items: center;
+    }
+
+    .bot {
+      width: 170px;
+      height: 170px;
+      border-radius: 44px;
+      background: linear-gradient(145deg, rgba(255,255,255,.95), rgba(208,213,255,.88));
+      box-shadow: 0 30px 60px rgba(0,0,0,.25);
+      position: relative;
+      animation: bob 3s ease-in-out infinite;
+    }
+
+    @keyframes bob {
+      0%,100% { transform: translateY(0) rotate(-2deg); }
+      50% { transform: translateY(-12px) rotate(2deg); }
+    }
+
+    .bot::before {
+      content: "";
+      position: absolute;
+      left: 32px;
+      top: 52px;
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      background: #090a1a;
+      box-shadow: 70px 0 #090a1a;
+    }
+
+    .bot::after {
+      content: "";
+      position: absolute;
+      left: 52px;
+      bottom: 45px;
+      width: 66px;
+      height: 14px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2));
+    }
+
+    .node {
+      position: absolute;
+      border: 1px solid rgba(255,255,255,.22);
+      background: rgba(255,255,255,.12);
+      border-radius: 18px;
+      padding: 10px 12px;
+      font-size: 13px;
+      font-weight: 900;
+      box-shadow: 0 12px 28px rgba(0,0,0,.18);
+    }
+
+    .node.a { left: 18px; top: 26px; }
+    .node.b { right: 18px; top: 62px; }
+    .node.c { left: 25px; bottom: 32px; }
+    .node.d { right: 18px; bottom: 28px; }
+
+    .card {
+      padding: clamp(20px, 4vw, 34px);
+      margin: 16px 0;
+    }
+
+    .input-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: end;
+    }
+
+    @media (max-width: 650px) {
+      .input-row { grid-template-columns: 1fr; }
+    }
+
+    label {
+      display: block;
+      color: var(--muted);
+      font-weight: 800;
+      margin-bottom: 8px;
+    }
+
+    input {
+      width: 100%;
+      color: var(--text);
+      background: rgba(255,255,255,.11);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      outline: none;
+      font: inherit;
+      font-weight: 800;
+    }
+
+    input::placeholder { color: rgba(255,255,255,.45); }
+
+    button {
+      border: 0;
+      border-radius: 18px;
+      padding: 15px 19px;
+      background: linear-gradient(135deg, var(--accent), #5b7cfa);
+      color: white;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 950;
+      box-shadow: 0 16px 34px rgba(91,124,250,.28);
+      transition: transform .15s ease, opacity .15s ease;
+    }
+
+    button:hover { transform: translateY(-2px); }
+    button:disabled { opacity: .48; cursor: not-allowed; transform: none; }
+
+    button.secondary {
+      background: rgba(255,255,255,.12);
+      border: 1px solid var(--border);
+      box-shadow: none;
+    }
+
+    button.gold {
+      background: linear-gradient(135deg, var(--accent3), #ff7a00);
+      color: #141414;
+      box-shadow: 0 16px 34px rgba(255,190,11,.25);
+    }
+
+    .hidden { display: none !important; }
+
+    .question-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .question-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .term {
+      font-size: clamp(34px, 8vw, 72px);
+      letter-spacing: -2.5px;
+      line-height: .92;
+      margin: 22px 0;
+      text-shadow: 0 0 30px rgba(0,229,255,.22);
+    }
+
+    .category {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      color: #0a1029;
+      background: linear-gradient(135deg, #8ff7ff, #e9ddff);
+      border-radius: 999px;
+      padding: 8px 12px;
+      font-weight: 1000;
+      font-size: 13px;
+    }
+
+    .options {
+      display: grid;
+      gap: 12px;
+    }
+
+    .option {
+      width: 100%;
+      text-align: left;
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--border);
+      box-shadow: none;
+      position: relative;
+      overflow: hidden;
+      min-height: 74px;
+    }
+
+    .option:hover {
+      background: rgba(255,255,255,.16);
+    }
+
+    .option.correct {
+      background: linear-gradient(135deg, rgba(66,245,179,.25), rgba(66,245,179,.08));
+      border-color: rgba(66,245,179,.9);
+    }
+
+    .option.wrong {
+      background: linear-gradient(135deg, rgba(255,107,107,.28), rgba(255,107,107,.08));
+      border-color: rgba(255,107,107,.9);
+    }
+
+    .feedback {
+      margin-top: 16px;
+      border-radius: 22px;
+      padding: 16px;
+      background: rgba(255,255,255,.10);
+      border: 1px solid var(--border);
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    .feedback strong {
+      color: white;
+      font-size: 19px;
+    }
+
+    .progress {
+      height: 12px;
+      background: rgba(255,255,255,.10);
+      border-radius: 999px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+
+    .bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, var(--accent2), var(--accent), var(--accent3));
+      transition: width .35s ease;
+    }
+
+    .row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 14px;
+    }
+
+    @media (max-width: 760px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.10);
+      border-radius: 22px;
+      padding: 16px;
+    }
+
+    .stat b {
+      display: block;
+      font-size: 28px;
+      color: white;
+      letter-spacing: -1px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 13px;
+      font-weight: 800;
+    }
+
+    .leader-note {
+      border: 1px solid rgba(255,190,11,.40);
+      background: rgba(255,190,11,.13);
+      color: #fff0bf;
+      border-radius: 22px;
+      padding: 16px;
+      margin-top: 16px;
+    }
+
+    .mini {
+      font-size: 14px;
+      color: var(--muted);
+      margin: 6px 0;
+    }
+
+    .confetti {
+      pointer-events: none;
+      position: fixed;
+      inset: 0;
+      overflow: hidden;
+      z-index: 999;
+    }
+
+    .confetti span {
+      position: absolute;
+      top: -20px;
+      width: 10px;
+      height: 16px;
+      border-radius: 3px;
+      background: var(--accent3);
+      animation: fall 900ms ease-out forwards;
+    }
+
+    @keyframes fall {
+      to { transform: translateY(110vh) rotate(500deg); opacity: 0; }
+    }
+
+    .review-item {
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,.08);
+      border-radius: 20px;
+      padding: 14px;
+      margin: 10px 0;
+    }
+
+    .review-item b { color: white; }
+    .review-item .ok { color: var(--good); font-weight: 950; }
+    .review-item .no { color: var(--bad); font-weight: 950; }
+
+    .footer {
+      color: rgba(255,255,255,.48);
+      text-align: center;
+      padding: 18px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+<div class="orb one"></div>
+<div class="orb two"></div>
+<div class="confetti hidden" id="confetti"></div>
+
+<div class="app">
+  <div class="topbar hidden" id="topbar">
+    <span class="pill" id="teamPill">Team</span>
+    <span class="pill" id="scorePill">Score: 0</span>
+    <span class="pill" id="streakPill">🔥 0</span>
+  </div>
+
+  <section id="home" class="hero">
+    <div class="hero-grid">
+      <div>
+        <div class="kicker">🧠 Marketing × Agentic AI × No-Code</div>
+        <h1>The Codeless Marketing Lab Quest</h1>
+        <p>
+          A fast quiz game for the Berlin orientation session. Play in teams, master the language of modern marketing and agentic AI, and compete for the highest score.
+        </p>
+        <div class="card" style="margin-top:20px;">
+          <label for="teamName">Enter team name</label>
+          <div class="input-row">
+            <input id="teamName" placeholder="Example: Brand Hackers, Prompt Ninjas, Agent Squad" maxlength="32" />
+            <button class="gold" onclick="startGame()">Start Quest</button>
+          </div>
+          <p class="mini">Prize mode: each team plays once, screenshots the final score, and shares it with the facilitator.</p>
+        </div>
+      </div>
+
+      <div class="visual" aria-label="Game illustration">
+        <div class="node a">LLM</div>
+        <div class="node b">Brand</div>
+        <div class="bot"></div>
+        <div class="node c">Workflow</div>
+        <div class="node d">Persona</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="game" class="hidden">
+    <div class="card question-card">
+      <div class="question-head">
+        <span class="category" id="categoryBadge">Category</span>
+        <span class="pill" id="questionCounter">Question 1 / 24</span>
+      </div>
+
+      <h2>What does this term mean?</h2>
+      <div class="term" id="termText">Term</div>
+
+      <div class="progress" aria-label="progress">
+        <div class="bar" id="progressBar"></div>
+      </div>
+
+      <div class="options" id="options"></div>
+
+      <div class="feedback hidden" id="feedback"></div>
+
+      <br>
+      <div class="row">
+        <button id="nextBtn" onclick="nextQuestion()" disabled>Next Question</button>
+        <button class="secondary" onclick="finishGame()">Finish Now</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="final" class="hidden">
+    <div class="card">
+      <div class="kicker">🏁 Quest Complete</div>
+      <h2 id="finalTeam">Team</h2>
+      <div class="term" id="rankTitle">Rank</div>
+
+      <div class="stats">
+        <div class="stat"><b id="finalScore">0</b><span>Total Score</span></div>
+        <div class="stat"><b id="finalCorrect">0</b><span>Correct</span></div>
+        <div class="stat"><b id="finalAccuracy">0%</b><span>Accuracy</span></div>
+        <div class="stat"><b id="finalStreak">0</b><span>Best Streak</span></div>
+      </div>
+
+      <div class="leader-note">
+        🏆 <strong>Prize instruction:</strong> take a screenshot of this final screen and submit it to the facilitator. Highest score wins. If two teams tie, use accuracy and best streak as tie-breakers.
+      </div>
+
+      <br>
+      <div class="row">
+        <button class="gold" onclick="showReview()">Review Answers</button>
+        <button onclick="restart()">Play Again</button>
+      </div>
+    </div>
+
+    <div class="card hidden" id="reviewCard">
+      <h2>Answer Review</h2>
+      <div id="reviewList"></div>
+    </div>
+  </section>
+
+  <div class="footer">Designed for the Codeless Marketing Lab · Berlin Orientation</div>
+</div>
+
+<script>
+const questionBank = [
+  {
+    category: "Agentic AI",
+    term: "Agentic AI",
+    correct: "AI systems that can pursue goals, make decisions, use tools, and complete multi-step tasks with some autonomy.",
+    wrong: [
+      "A simple chatbot that only answers one question at a time.",
+      "A design tool used only for creating social media graphics.",
+      "An AI model that works only when it is connected to paid ads."
+    ],
+    explain: "Agentic AI is goal-oriented. It can plan, use tools, remember context, and act across steps instead of only responding once.",
+    win: "Agent activated! Your team just unlocked autonomous thinking."
+  },
+  {
+    category: "Agentic AI",
+    term: "AI Agent",
+    correct: "A goal-directed AI component that can observe context, reason, use tools, and perform tasks.",
+    wrong: [
+      "A human marketing employee who manually approves all posts.",
+      "A static PDF containing brand guidelines.",
+      "A logo generator with no memory or task flow."
+    ],
+    explain: "An AI agent is often part of a larger workflow. It may research, write, analyze, classify, summarize, or trigger actions.",
+    win: "Nice! Your agent is ready for deployment."
+  },
+  {
+    category: "AI Foundations",
+    term: "LLM",
+    correct: "A large language model trained to understand and generate language-based outputs.",
+    wrong: [
+      "A marketing license used to publish brand content.",
+      "A low-code layout manager for websites.",
+      "A customer relationship dashboard."
+    ],
+    explain: "LLMs power many text-based AI tools. They can draft, summarize, classify, brainstorm, translate, and reason with prompts.",
+    win: "Language engine online!"
+  },
+  {
+    category: "Context Engineering",
+    term: "Context Engineering",
+    correct: "Designing and managing the information an AI system receives so it can produce accurate, relevant, and useful outputs.",
+    wrong: [
+      "Choosing the color palette for a brand identity.",
+      "Compressing images before posting them online.",
+      "Writing shorter captions for Instagram."
+    ],
+    explain: "Context engineering is more than prompting. It includes examples, constraints, memory, retrieved knowledge, user needs, and task structure.",
+    win: "Excellent context! The AI now knows what matters."
+  },
+  {
+    category: "Agentic AI",
+    term: "AI Orchestration",
+    correct: "Coordinating different AI models, agents, tools, data, and actions inside one connected system.",
+    wrong: [
+      "Adding background music to a brand video.",
+      "Changing the order of slides in a pitch deck.",
+      "Scheduling a single social media post manually."
+    ],
+    explain: "AI orchestration connects parts together: which agent acts first, what tool is used, what data is passed, and when humans approve.",
+    win: "Orchestra synced! Every agent knows its cue."
+  },
+  {
+    category: "Agentic AI",
+    term: "Agentic Orchestration",
+    correct: "Managing multiple goal-driven AI agents so they collaborate, hand off tasks, and complete a workflow.",
+    wrong: [
+      "Using one AI chatbot to generate a slogan.",
+      "A visual style guide for animated characters.",
+      "A method for choosing campaign colors randomly."
+    ],
+    explain: "Agentic orchestration is useful when a process needs several specialized agents, such as research, strategy, copywriting, design, and analytics.",
+    win: "Multi-agent combo unlocked!"
+  },
+  {
+    category: "Workflow",
+    term: "Workflow",
+    correct: "A sequence of steps that transforms inputs into outputs through tasks, decisions, and handoffs.",
+    wrong: [
+      "A single logo used across brand assets.",
+      "A random list of unrelated marketing ideas.",
+      "The emotional feeling created by a product name."
+    ],
+    explain: "In a marketing lab, a workflow might move from research → persona → campaign concept → content → approval → publishing.",
+    win: "Workflow path cleared!"
+  },
+  {
+    category: "Automation",
+    term: "Automation",
+    correct: "Using technology to perform repeated tasks with little or no manual effort.",
+    wrong: [
+      "Asking students to manually copy every campaign result.",
+      "Changing the tone of voice from friendly to formal.",
+      "Brainstorming brand names in a classroom discussion."
+    ],
+    explain: "Automation can schedule posts, send emails, classify leads, update sheets, trigger alerts, or generate reports.",
+    win: "Manual work reduced. Productivity boosted!"
+  },
+  {
+    category: "Automation",
+    term: "Trigger",
+    correct: "An event or condition that starts an automated workflow.",
+    wrong: [
+      "A brand mascot used in a campaign.",
+      "The final image exported from a design tool.",
+      "The font selected for a visual identity."
+    ],
+    explain: "Examples include a new form submission, a scheduled time, a new row in a sheet, or a customer clicking a link.",
+    win: "Spark detected! The workflow begins."
+  },
+  {
+    category: "Automation",
+    term: "Human-in-the-Loop",
+    correct: "A person reviews, guides, or approves AI actions at important points in the process.",
+    wrong: [
+      "A fully automated system with no human review.",
+      "A circular customer journey diagram.",
+      "A campaign where humans are not allowed to edit AI content."
+    ],
+    explain: "Human-in-the-loop design protects quality, ethics, brand safety, and strategic judgment.",
+    win: "Great control point! The humans stay in charge."
+  },
+  {
+    category: "Prompting",
+    term: "Prompt",
+    correct: "An instruction or task description given to an AI system to guide its response.",
+    wrong: [
+      "The final campaign budget.",
+      "A social media metric that measures impressions.",
+      "The legal name of a brand."
+    ],
+    explain: "A strong prompt includes role, task, context, constraints, audience, format, and quality criteria.",
+    win: "Prompt power upgraded!"
+  },
+  {
+    category: "Prompting",
+    term: "Prompt Chaining",
+    correct: "Breaking a larger task into connected prompts where each output feeds the next step.",
+    wrong: [
+      "Posting the same caption repeatedly on every platform.",
+      "Linking a brand slogan to a logo animation.",
+      "Using only one prompt for an entire complex campaign."
+    ],
+    explain: "Prompt chaining is useful for structured workflows, such as research first, then strategy, then copy, then review.",
+    win: "Chain reaction! Your AI flow is getting smarter."
+  },
+  {
+    category: "Branding",
+    term: "Brand Positioning",
+    correct: "The unique place a brand aims to occupy in the customer’s mind compared to competitors.",
+    wrong: [
+      "The exact position of a logo on a poster.",
+      "The number of posts published in one month.",
+      "The location of a product on a supermarket shelf only."
+    ],
+    explain: "Positioning clarifies why the brand is different, who it serves, and what value it owns.",
+    win: "Brand space secured!"
+  },
+  {
+    category: "Branding",
+    term: "Brand Promise",
+    correct: "The value or experience a brand commits to consistently delivering to customers.",
+    wrong: [
+      "A temporary discount code.",
+      "A private note written by the design team.",
+      "A campaign schedule for paid ads."
+    ],
+    explain: "A brand promise should be believable, valuable, distinctive, and consistently reflected in the experience.",
+    win: "Promise accepted. Trust level increased!"
+  },
+  {
+    category: "Branding",
+    term: "Tone of Voice",
+    correct: "The way a brand sounds in its communication, such as friendly, bold, premium, playful, or expert.",
+    wrong: [
+      "The volume of the music in a video ad.",
+      "The size of the logo on a billboard.",
+      "The number of influencers used in a campaign."
+    ],
+    explain: "Tone of voice helps the brand feel consistent and recognizable across channels.",
+    win: "Voice locked! The brand now sounds consistent."
+  },
+  {
+    category: "Branding",
+    term: "Brand Archetype",
+    correct: "A personality model used to shape a brand’s character, story, and emotional appeal.",
+    wrong: [
+      "A type of AI model used only for translation.",
+      "A spreadsheet for campaign analytics.",
+      "A method for calculating social media reach."
+    ],
+    explain: "Examples include Hero, Explorer, Creator, Rebel, Sage, Caregiver, and Magician.",
+    win: "Character unlocked! Your brand has a personality."
+  },
+  {
+    category: "Marketing Strategy",
+    term: "Customer Persona",
+    correct: "A fictional but research-based profile representing a target customer group.",
+    wrong: [
+      "A real customer’s private password.",
+      "A brand logo variation.",
+      "The final checkout page of an online store."
+    ],
+    explain: "Personas help marketers design messages, offers, channels, and experiences around real audience needs.",
+    win: "Persona discovered! Targeting improved."
+  },
+  {
+    category: "Marketing Strategy",
+    term: "Segmentation",
+    correct: "Dividing a broad market into smaller groups with shared characteristics or needs.",
+    wrong: [
+      "Cutting a video into shorter clips only.",
+      "Choosing one random slogan for everyone.",
+      "Adding more icons to a landing page."
+    ],
+    explain: "Segments can be based on demographics, behavior, lifestyle, needs, geography, or value.",
+    win: "Audience map revealed!"
+  },
+  {
+    category: "Marketing Strategy",
+    term: "Targeting",
+    correct: "Choosing which market segment or audience group the campaign will focus on.",
+    wrong: [
+      "Designing every possible message for every possible customer.",
+      "Selecting a font for a poster.",
+      "Publishing without knowing who the audience is."
+    ],
+    explain: "Targeting comes after segmentation. You decide which group is most relevant and valuable.",
+    win: "Target acquired!"
+  },
+  {
+    category: "Marketing Strategy",
+    term: "Value Proposition",
+    correct: "A clear statement of the benefit a product or brand offers and why customers should care.",
+    wrong: [
+      "A list of all employees working on a project.",
+      "The visual size of the campaign poster.",
+      "A random collection of trending hashtags."
+    ],
+    explain: "A strong value proposition answers: what value, for whom, and why this brand.",
+    win: "Value crystal clear!"
+  },
+  {
+    category: "Campaigns",
+    term: "CTA",
+    correct: "Call to Action: a prompt that tells the audience what to do next.",
+    wrong: [
+      "Creative Target Audience.",
+      "Campaign Timing Automation.",
+      "Customer Tone Analysis."
+    ],
+    explain: "Examples include Sign up, Join now, Book a demo, Download the guide, or Start your free trial.",
+    win: "Action button pressed!"
+  },
+  {
+    category: "Campaigns",
+    term: "Marketing Funnel",
+    correct: "The customer path from awareness to interest, consideration, conversion, and loyalty.",
+    wrong: [
+      "A design shape used in presentation slides.",
+      "A method for choosing brand colors.",
+      "A list of AI tools without any customer journey."
+    ],
+    explain: "Funnels help marketers design messages and metrics for different stages of customer decision-making.",
+    win: "Customer journey unlocked!"
+  },
+  {
+    category: "Campaigns",
+    term: "Conversion",
+    correct: "When a user completes a desired action, such as signing up, buying, registering, or downloading.",
+    wrong: [
+      "Changing English text into German only.",
+      "Changing the brand logo after a campaign.",
+      "Making a design file smaller."
+    ],
+    explain: "Conversions are tied to campaign goals and can be measured through analytics.",
+    win: "Conversion achieved! Points captured."
+  },
+  {
+    category: "Analytics",
+    term: "KPI",
+    correct: "A key performance indicator used to measure progress toward a specific goal.",
+    wrong: [
+      "A type of AI-generated image.",
+      "A slogan used in product packaging.",
+      "A brand personality trait."
+    ],
+    explain: "Marketing KPIs include conversion rate, CTR, reach, engagement rate, leads, CAC, and ROI.",
+    win: "Metrics dashboard online!"
+  },
+  {
+    category: "Analytics",
+    term: "CTR",
+    correct: "Click-through rate: the percentage of people who click after seeing a link, ad, or message.",
+    wrong: [
+      "Customer Trust Report.",
+      "Campaign Tone Revision.",
+      "Creative Team Ranking."
+    ],
+    explain: "CTR helps evaluate how attractive or relevant a link, ad, subject line, or CTA is.",
+    win: "Click signal detected!"
+  },
+  {
+    category: "Analytics",
+    term: "A/B Testing",
+    correct: "Comparing two versions of content or experience to see which performs better.",
+    wrong: [
+      "Using two brand names at the same time forever.",
+      "Testing if a website opens on two phones only.",
+      "A method for deleting old campaign files."
+    ],
+    explain: "A/B testing can compare headlines, CTAs, visuals, email subject lines, landing pages, or offers.",
+    win: "Experiment launched!"
+  },
+  {
+    category: "No-Code Tools",
+    term: "No-Code",
+    correct: "Creating apps, workflows, websites, or automations using visual tools without traditional coding.",
+    wrong: [
+      "A rule that forbids using any technology.",
+      "Writing Python code faster.",
+      "A branding method for luxury products."
+    ],
+    explain: "No-code tools make digital building accessible through drag-and-drop interfaces, templates, integrations, and visual workflows.",
+    win: "Builder mode activated!"
+  },
+  {
+    category: "No-Code Tools",
+    term: "Integration",
+    correct: "Connecting different tools or systems so they can exchange data and work together.",
+    wrong: [
+      "Changing the color of a brand logo.",
+      "Writing a longer campaign slogan.",
+      "Deleting duplicate posts manually."
+    ],
+    explain: "Integrations are essential in codeless workflows, such as connecting forms, sheets, AI tools, email, and dashboards.",
+    win: "Tools connected. System upgraded!"
+  }
+];
+
+let state = {
+  team: "",
+  order: [],
+  index: 0,
+  score: 0,
+  correct: 0,
+  answered: 0,
+  streak: 0,
+  bestStreak: 0,
+  history: [],
+  locked: false
+};
+
+const correctPrompts = [
+  "Legendary move!",
+  "Perfect signal!",
+  "The workflow gods approve!",
+  "Brand brain activated!",
+  "That answer has main-character energy!",
+  "Agent squad says yes!",
+  "Berlin Lab brilliance!",
+  "Sharp thinking. Very campaign-ready!"
+];
+
+const wrongPrompts = [
+  "Almost! Recalibrate the agent.",
+  "Not quite — the model needs better context.",
+  "Close, but the workflow took a wrong turn.",
+  "Oops! BrandBot detected confusion.",
+  "Try again next round — the quest continues.",
+  "The strategy needs a quick debug."
+];
+
+function $(id){ return document.getElementById(id); }
+
+function shuffle(arr) {
+  return arr.map(v => [Math.random(), v]).sort((a,b) => a[0]-b[0]).map(x => x[1]);
+}
+
+function hideAll() {
+  ["home","game","final"].forEach(id => $(id).classList.add("hidden"));
+}
+
+function save() {
+  localStorage.setItem("codelessMarketingQuest", JSON.stringify(state));
+}
+
+function load() {
+  const saved = localStorage.getItem("codelessMarketingQuest");
+  if (saved) {
+    try { state = JSON.parse(saved); } catch(e) {}
+  }
+}
+
+function updateTopbar() {
+  $("teamPill").textContent = "🚩 " + (state.team || "Team");
+  $("scorePill").textContent = "⭐ Score: " + state.score;
+  $("streakPill").textContent = "🔥 " + state.streak;
+  $("topbar").classList.toggle("hidden", !state.team);
+  save();
+}
+
+function startGame() {
+  const teamName = $("teamName").value.trim();
+  state = {
+    team: teamName || "Unnamed Quest Team",
+    order: shuffle([...Array(questionBank.length).keys()]),
+    index: 0,
+    score: 0,
+    correct: 0,
+    answered: 0,
+    streak: 0,
+    bestStreak: 0,
+    history: [],
+    locked: false
+  };
+  updateTopbar();
+  hideAll();
+  $("game").classList.remove("hidden");
+  renderQuestion();
+}
+
+function renderQuestion() {
+  state.locked = false;
+  updateTopbar();
+
+  const q = questionBank[state.order[state.index]];
+  $("categoryBadge").textContent = "✦ " + q.category;
+  $("questionCounter").textContent = `Question ${state.index + 1} / ${state.order.length}`;
+  $("termText").textContent = q.term;
+  $("progressBar").style.width = `${(state.index / state.order.length) * 100}%`;
+  $("feedback").classList.add("hidden");
+  $("nextBtn").disabled = true;
+  $("nextBtn").textContent = state.index === state.order.length - 1 ? "Finish Quest" : "Next Question";
+
+  const allOptions = shuffle([q.correct, ...q.wrong]);
+  const optionsDiv = $("options");
+  optionsDiv.innerHTML = "";
+  allOptions.forEach((option, idx) => {
+    const btn = document.createElement("button");
+    btn.className = "option";
+    btn.innerHTML = `<span style="opacity:.65; margin-right:8px;">${String.fromCharCode(65+idx)}.</span>${option}`;
+    btn.onclick = () => answer(option, btn, q);
+    optionsDiv.appendChild(btn);
+  });
+}
+
+function answer(selected, btn, q) {
+  if (state.locked) return;
+  state.locked = true;
+
+  const isCorrect = selected === q.correct;
+  const buttons = [...document.querySelectorAll(".option")];
+  buttons.forEach(b => {
+    b.disabled = true;
+    if (b.textContent.includes(q.correct)) b.classList.add("correct");
+  });
+
+  if (isCorrect) {
+    const streakBonus = state.streak >= 2 ? 2 : 0;
+    const points = 10 + streakBonus;
+    state.score += points;
+    state.correct += 1;
+    state.streak += 1;
+    state.bestStreak = Math.max(state.bestStreak, state.streak);
+    btn.classList.add("correct");
+    launchConfetti();
+    $("feedback").innerHTML = `
+      <strong>✅ ${randomItem(correctPrompts)} +${points} points</strong><br>
+      ${q.win}<br><br>
+      <span>${q.explain}</span>
+    `;
+  } else {
+    state.score = Math.max(0, state.score - 3);
+    state.streak = 0;
+    btn.classList.add("wrong");
+    $("feedback").innerHTML = `
+      <strong>❌ ${randomItem(wrongPrompts)} -3 points</strong><br>
+      <span>${q.explain}</span>
+    `;
+  }
+
+  state.answered += 1;
+  state.history.push({
+    term: q.term,
+    category: q.category,
+    selected,
+    correct: q.correct,
+    isCorrect,
+    explain: q.explain
+  });
+
+  $("feedback").classList.remove("hidden");
+  $("nextBtn").disabled = false;
+  updateTopbar();
+}
+
+function nextQuestion() {
+  if (state.index < state.order.length - 1) {
+    state.index += 1;
+    renderQuestion();
+  } else {
+    finishGame();
+  }
+}
+
+function finishGame() {
+  $("progressBar").style.width = "100%";
+  hideAll();
+  $("final").classList.remove("hidden");
+  updateTopbar();
+
+  const accuracy = state.answered ? Math.round((state.correct / state.answered) * 100) : 0;
+  $("finalTeam").textContent = state.team;
+  $("finalScore").textContent = state.score;
+  $("finalCorrect").textContent = `${state.correct}/${state.answered}`;
+  $("finalAccuracy").textContent = accuracy + "%";
+  $("finalStreak").textContent = state.bestStreak;
+
+  let rank = "";
+  if (state.score >= 260) rank = "🏆 Quest Champion";
+  else if (state.score >= 210) rank = "🚀 Agentic Marketing Master";
+  else if (state.score >= 160) rank = "⚡ Workflow Strategist";
+  else if (state.score >= 100) rank = "🧠 BrandBot Builder";
+  else rank = "🌱 Lab Explorer";
+
+  $("rankTitle").textContent = rank;
+  save();
+}
+
+function showReview() {
+  const reviewCard = $("reviewCard");
+  const list = $("reviewList");
+  list.innerHTML = "";
+
+  state.history.forEach((h, i) => {
+    const div = document.createElement("div");
+    div.className = "review-item";
+    div.innerHTML = `
+      <div class="${h.isCorrect ? "ok" : "no"}">${h.isCorrect ? "Correct" : "Incorrect"} · Q${i+1} · ${h.category}</div>
+      <b>${h.term}</b><br>
+      <span class="mini">Your answer: ${h.selected}</span><br>
+      ${!h.isCorrect ? `<span class="mini">Correct answer: ${h.correct}</span><br>` : ""}
+      <span class="mini">${h.explain}</span>
+    `;
+    list.appendChild(div);
+  });
+
+  reviewCard.classList.remove("hidden");
+  reviewCard.scrollIntoView({behavior:"smooth"});
+}
+
+function restart() {
+  localStorage.removeItem("codelessMarketingQuest");
+  location.reload();
+}
+
+function randomItem(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function launchConfetti() {
+  const c = $("confetti");
+  c.innerHTML = "";
+  c.classList.remove("hidden");
+  const colors = ["#00e5ff", "#8b5cf6", "#ffbe0b", "#42f5b3", "#ffffff"];
+  for (let i = 0; i < 34; i++) {
+    const s = document.createElement("span");
+    s.style.left = Math.random() * 100 + "vw";
+    s.style.background = colors[Math.floor(Math.random() * colors.length)];
+    s.style.animationDelay = Math.random() * 180 + "ms";
+    s.style.transform = `rotate(${Math.random()*180}deg)`;
+    c.appendChild(s);
+  }
+  setTimeout(() => c.classList.add("hidden"), 1100);
+}
+
+load();
+if (state.team && state.answered > 0 && state.index < questionBank.length) {
+  updateTopbar();
+  hideAll();
+  $("game").classList.remove("hidden");
+  renderQuestion();
+} else {
+  $("home").classList.remove("hidden");
+}
+</script>
+</body>
+</html>
